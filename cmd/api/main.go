@@ -1,9 +1,11 @@
 package main
 
-import "github.com/andrefelizardo/todo-api/configs"
+import (
+	"github.com/andrefelizardo/todo-api/internal/routes"
+)
 
 func main() {
-	router := configs.SetupRouter()
+	router := routes.SetupRouter()
 
 	router.Run()
 }

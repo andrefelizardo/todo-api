@@ -1,4 +1,4 @@
-package configs
+package routes
 
 import (
 	"github.com/andrefelizardo/todo-api/internal/controllers"
