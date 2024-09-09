@@ -17,12 +17,12 @@ COPY ${ENV_FILE} ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o todo-api ./cmd/api/main.go
 
 # Use a minimal image to run the compiled Go binary
-FROM gcr.io/distroless/base-debian10
+FROM ubuntu:22.04
 
 WORKDIR /app
 
 COPY --from=builder /app/todo-api/ .
-# RUN chmod +x /app/todo-api
+RUN chmod +x /app/todo-api
 
 ARG ENV_FILE
 COPY --from=builder /app/${ENV_FILE} ${ENV_FILE}

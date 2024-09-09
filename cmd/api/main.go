@@ -20,9 +20,7 @@ func main() {
 		log.Fatal("Error loading database config", err)
 	}
 
-	db.AutoMigrate()
-
-	router := routes.SetupRouter()
+	router := routes.SetupRouter(db)
 
 	router.Run()
 }

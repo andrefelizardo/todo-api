@@ -3,9 +3,10 @@ package routes
 import (
 	"github.com/andrefelizardo/todo-api/internal/controllers"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func SetupRouter() *gin.Engine {
+func SetupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 
 	tasks := router.Group("/tasks")

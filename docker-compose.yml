@@ -27,11 +27,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - ENV_FILE=.env
+    env_file:
+      - .env
     container_name: todo_api
     restart: on-failure
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}

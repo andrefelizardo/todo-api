@@ -15,6 +15,7 @@ func NewUserController() *UserController {
 }
 
 func (u *UserController) CreateUser(ctx *gin.Context) {
+	
 	ctx.JSON(http.StatusCreated, gin.H{
 		"message": "User created",
 	})

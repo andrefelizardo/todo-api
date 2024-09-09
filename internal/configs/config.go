@@ -1,60 +1,54 @@
 package configs
 
 import (
-	"log"
-	"strings"
+	"fmt"
+	"os"
 
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-    App   AppConfig
-    DB    DBConfig
-    JWT   JWTConfig
+	App AppConfig
+	DB  DBConfig
+	JWT JWTConfig
 }
 
 type AppConfig struct {
-    Name string
-    Env  string
+	Name string
+	Env  string
 }
 
 type DBConfig struct {
-    Host     string
-    Port     string
-    User     string
-    Password string
-    Name     string
-    SSLMode  string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
+	SSLMode  string
 }
 
 type JWTConfig struct {
-    Secret string
+	Secret string
 }
 
 func LoadConfig() (*Config, error) {
-var config Config
+    var config Config
 
-viper.SetConfigName(".env")
-viper.SetConfigType("env")
-viper.AddConfigPath(".")
-viper.AutomaticEnv()
-viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+    viper.AutomaticEnv()
 
-env := viper.GetString("APP_ENV")
-if env == "production" {
-	viper.SetConfigName(".env.production")
-}
+    config.DB.Host = viper.GetString("DB_HOST")
+    config.DB.Port = viper.GetString("DB_PORT")
+    config.DB.User = viper.GetString("DB_USER")
+    config.DB.Password = viper.GetString("DB_PASSWORD")
+    config.DB.Name = viper.GetString("DB_NAME")
+    config.DB.SSLMode = viper.GetString("DB_SSLMODE")
 
-if err := viper.ReadInConfig(); err != nil {
-	log.Printf("Error reading config file", err)
-	return nil, err
-}
+    fmt.Printf("Viper DB_HOST: %s\n", config.DB.Host)
 
-if err := viper.Unmarshal(&config); err != nil {
-	log.Printf("Error unmarshalling config", err)
-	return nil, err
-}
+    // Fallback para usar os.Getenv, caso o Viper não funcione
+    if config.DB.Host == "" {
+        config.DB.Host = os.Getenv("DB_HOST")
+    }
 
-return &config, nil
-
+    return &config, nil
 }
