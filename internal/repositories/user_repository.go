@@ -1,11 +1,25 @@
 package repositories
 
-type UserRepository struct {}
+import (
+	"github.com/andrefelizardo/todo-api/internal/domain"
+	"gorm.io/gorm"
+)
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+type UserRepository struct {
+	db *gorm.DB
 }
 
-func (u *UserRepository) CreateUser() {
-	// Create user
+func NewUserRepository(db *gorm.DB) *UserRepository {
+	return &UserRepository{
+		db: db,
+	}
+}
+
+func (u *UserRepository) Create(user domain.User) (*domain.User, error) {
+	result := u.db.Create(&user)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }

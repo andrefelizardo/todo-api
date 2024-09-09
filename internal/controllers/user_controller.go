@@ -1,20 +1,21 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/andrefelizardo/todo-api/internal/request"
+	"github.com/andrefelizardo/todo-api/internal/usecases"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
 type UserController struct{
-	// CreateUser func(c *gin.Context)
+	userUsecase usecases.UserUseCase
 }
 
-func NewUserController() *UserController {
-	return &UserController{}
+func NewUserController(userUsecase usecases.UserUseCase) *UserController {
+	return &UserController{
+		userUsecase: userUsecase,
+	}
 }
 
 func (u *UserController) CreateUser(ctx *gin.Context) {
@@ -26,15 +27,14 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	validate := validator.New()
-	err := validate.Struct(input)
+	user, err := u.userUsecase.CreateUser(input)
 	if err != nil {
-		errors := err.(validator.ValidationErrors)
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Validation error: %s", errors)})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	
 	ctx.JSON(http.StatusCreated, gin.H{
 		"message": "User created",
+		"data": user,
 	})
 }

@@ -12,7 +12,6 @@ type User struct {
 	Name   string	`gorm:"type:varchar(255);not null"`
 	Email string `gorm:"type:varchar(255);unique;not null"`
 	Password string `gorm:"type:varchar(255);not null"`
-	CreatedAt string `gorm:"type:timestamp;not null"`
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {

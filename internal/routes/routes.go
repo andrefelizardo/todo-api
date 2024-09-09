@@ -2,6 +2,8 @@ package routes
 
 import (
 	"github.com/andrefelizardo/todo-api/internal/controllers"
+	"github.com/andrefelizardo/todo-api/internal/repositories"
+	"github.com/andrefelizardo/todo-api/internal/usecases"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -22,7 +24,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		// tasks.DELETE("/:id", controllers.DeleteTask)
 	}
 
-	userController := controllers.NewUserController()
+	userUsecase := usecases.NewUserUseCase(*repositories.NewUserRepository(db))
+	userController := controllers.NewUserController(*userUsecase)
 	users := router.Group("/users")
 	{
 		users.POST("/", userController.CreateUser)
