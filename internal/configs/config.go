@@ -1,8 +1,9 @@
 package configs
 
 import (
-	"fmt"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
 )
@@ -43,7 +44,7 @@ func LoadConfig() (*Config, error) {
     config.DB.Name = viper.GetString("DB_NAME")
     config.DB.SSLMode = viper.GetString("DB_SSLMODE")
 
-    fmt.Printf("Viper DB_HOST: %s\n", config.DB.Host)
+	log.Info("Viper DB_HOST:", config.DB.Host)
 
     // Fallback para usar os.Getenv, caso o Viper não funcione
     if config.DB.Host == "" {

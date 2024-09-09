@@ -2,7 +2,8 @@ package infrastructure
 
 import (
 	"fmt"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/andrefelizardo/todo-api/internal/configs"
 	"github.com/andrefelizardo/todo-api/internal/domain"
@@ -11,18 +12,18 @@ import (
 )
 
 func NewDatabase(config *configs.DBConfig) (*gorm.DB, error) {
-	fmt.Printf("Connecting to database %s on %s:%s with %s\n", config.Name, config.Host, config.Port, config.SSLMode)
+	log.Infof("Connecting to database %s on %s:%s with %s\n", config.Name, config.Host, config.Port, config.SSLMode)
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", config.Host, config.User, config.Password, config.Name, config.Port, config.SSLMode)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Printf("Error connecting to database", err)
+		log.Error("Error connecting to database", err)
 		return nil, err
 	}
 
 	err = autoMigrate(db)
 	if err != nil {
-		log.Printf("Error during migration: %v", err)
+		log.Error("Error during migration:", err)
 		return nil, err
 	}
 
