@@ -31,6 +31,8 @@ services:
         - ENV_FILE=.env
     env_file:
       - .env
+    volumes:
+      - .:/app
     container_name: todo_api
     restart: on-failure
     environment:

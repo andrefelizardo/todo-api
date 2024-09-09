@@ -1,7 +1,9 @@
 # Use a Go image to build the application
-FROM golang:1.21.6 AS builder
+FROM golang:1.22.1 AS builder
 
 WORKDIR /app
+
+RUN go install github.com/air-verse/air@latest
 
 # Copy go.mod and go.sum and download dependencies
 COPY go.mod go.sum ./
@@ -17,10 +19,11 @@ COPY ${ENV_FILE} ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o todo-api ./cmd/api/main.go
 
 # Use a minimal image to run the compiled Go binary
-FROM ubuntu:22.04
+FROM golang:1.22.1
 
 WORKDIR /app
 
+COPY --from=builder /go/bin/air /usr/local/bin/air
 COPY --from=builder /app/todo-api/ .
 RUN chmod +x /app/todo-api
 
@@ -31,4 +34,4 @@ COPY --from=builder /app/${ENV_FILE} ${ENV_FILE}
 EXPOSE 8080
 
 # Command to run the API
-CMD ["./todo-api"]
+CMD ["air"]

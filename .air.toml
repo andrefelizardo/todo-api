@@ -1,0 +1,14 @@
+# .air.toml
+[build]
+  cmd = "go build -o ./tmp/main ./cmd/api/main.go"
+  bin = "./tmp/main"
+  full_bin = "APP_ENV=dev ./tmp/main"
+  log = "air_errors.log"
+
+[watch]
+  dirs = ["./"]
+
+  ignore = ["tmp", "vendor", ".git", "node_modules"]
+
+[delay]
+  after = 1000 # delay in ms after an edit
