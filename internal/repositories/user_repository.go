@@ -5,17 +5,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepository struct {
+type UserRepository interface {
+	Create(user domain.User) (*domain.User, error)
+}
+
+type userRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) *UserRepository {
-	return &UserRepository{
+func NewUserRepository(db *gorm.DB) *userRepositoryImpl {
+	return &userRepositoryImpl{
 		db: db,
 	}
 }
 
-func (u *UserRepository) Create(user domain.User) (*domain.User, error) {
+func (u *userRepositoryImpl) Create(user domain.User) (*domain.User, error) {
 	result := u.db.Create(&user)
 	if result.Error != nil {
 		return nil, result.Error
