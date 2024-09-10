@@ -1,5 +1,7 @@
 # Todo List API
 
+**Todo List API** built with **Golang** following the principles of **Clean Architecture**.
+
 ![Golang](https://img.shields.io/badge/Go-1.18-blue.svg)
 ![CloudRun](https://img.shields.io/badge/Cloud%20Run-Deployed-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
