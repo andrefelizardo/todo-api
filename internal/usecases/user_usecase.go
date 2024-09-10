@@ -2,6 +2,7 @@ package usecases
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -29,6 +30,11 @@ func (u *UserUseCase) CreateUser(input request.CreateUserRequest) (*response.Use
 	if err != nil {
 		return nil, err
 	}
+
+	if u.userRepository == nil {
+        return nil, fmt.Errorf("user repository is not initialized")
+    }
+
 
 	hashedPassword, err := hashPassword(input.Password)
 	if err != nil {
@@ -60,10 +66,32 @@ func (u *UserUseCase) CreateUser(input request.CreateUserRequest) (*response.Use
 func (u *UserUseCase) validateInput(input request.CreateUserRequest) error {
 	validate := validator.New()
 	err := validate.Struct(input)
+
 	if err != nil {
 		errors := err.(validator.ValidationErrors)
-		return fmt.Errorf("validation error: %s", errors)
+		var errorMessages []string
+		
+		for _, e := range errors {
+			var errorMsg string
+
+			switch e.Tag() {
+			case "required":
+				errorMsg = fmt.Sprintf("Field '%s' is required", e.Field())
+			case "min":
+				errorMsg = fmt.Sprintf("Field '%s' must be at least %s characters long", e.Field(), e.Param())
+			case "max":
+				errorMsg = fmt.Sprintf("Field '%s' must be at most %s characters long", e.Field(), e.Param())
+			case "email":
+				errorMsg = fmt.Sprintf("Field '%s' must be a valid email address", e.Field())
+			default:
+				errorMsg = fmt.Sprintf("Field '%s' is invalid", e.Field())
+		}
+
+		errorMessages = append(errorMessages, errorMsg)
 	}
+
+	return fmt.Errorf(strings.Join(errorMessages, ", "))
+}
 
 	return nil
 }

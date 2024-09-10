@@ -35,3 +35,14 @@ stop:
 clean:
 	@echo "Cleaning up unused Docker containers, networks and images..."
 	docker system prune -f
+
+
+# Testes
+test:
+	@echo "Running tests..."
+	go test -v ./...
+
+test-coverage:
+	@echo "Generating test coverage report..."
+	go test -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out
