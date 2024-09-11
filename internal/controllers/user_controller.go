@@ -29,8 +29,13 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 
 	user, err := u.userUsecase.CreateUser(input)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		if validationErr, ok := err.(*usecases.ValidationError); ok {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Message})
+			return
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
 	
 	ctx.JSON(http.StatusCreated, gin.H{

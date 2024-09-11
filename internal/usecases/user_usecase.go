@@ -19,6 +19,14 @@ type UserUseCase struct {
 	userRepository repositories.UserRepository
 }
 
+type ValidationError struct {
+	Message string
+}
+
+func (v *ValidationError) Error() string {
+	return fmt.Sprintf("%v", v.Message)
+}
+
 func NewUserUseCase(userRepository repositories.UserRepository) *UserUseCase {
 	return &UserUseCase{
 		userRepository: userRepository,
@@ -90,7 +98,7 @@ func (u *UserUseCase) validateInput(input request.CreateUserRequest) error {
 		errorMessages = append(errorMessages, errorMsg)
 	}
 
-	return fmt.Errorf(strings.Join(errorMessages, ", "))
+	return &ValidationError{Message: strings.Join(errorMessages, ", ")}
 }
 
 	return nil
