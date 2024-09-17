@@ -32,7 +32,7 @@ func NewDatabase(config *configs.DBConfig) (*gorm.DB, error) {
 
 func autoMigrate(db *gorm.DB) error {
 	
-	err := db.AutoMigrate(&domain.User{})
+	err := db.AutoMigrate(&domain.User{}, &domain.Task{})
 	if err != nil {
 		return fmt.Errorf("migration failed: %w", err)
 	}

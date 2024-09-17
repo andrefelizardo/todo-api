@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/andrefelizardo/todo-api/internal/controllers"
+	"github.com/andrefelizardo/todo-api/internal/middlewares"
 	"github.com/andrefelizardo/todo-api/internal/repositories"
 	"github.com/andrefelizardo/todo-api/internal/usecases"
 	"github.com/gin-gonic/gin"
@@ -11,7 +12,22 @@ import (
 func SetupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 
-	// tasks := router.Group("/tasks")
+	//TODO: Tasks
+	// [ ] Implement tasks' endpoints with authentication middleware
+	// [ ] Implement task listing with user owner middleware
+	//[ ] Implement task creation with verified middleware
+
+
+	taskUsecase := usecases.NewTasksUseCase(repositories.NewTasksRepository(db))
+	taskController := controllers.NewTasksController(*taskUsecase)
+
+	tasks := router.Group("/tasks").Use(middlewares.AuthMiddleware())
+	{
+		tasks.GET("/", taskController.ListTasks)
+	}
+	// tasks := verified.Group("/tasks")
+	// tasks.GET("/", taskController.ListTasks)
+	
 	// {
 	// 	tasks.GET("/", func(c *gin.Context) {
 	// 		c.JSON(200, gin.H{

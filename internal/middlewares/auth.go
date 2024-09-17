@@ -10,6 +10,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+const UserContextKey = "userID"
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -37,6 +39,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	}
 
 	c.Set("claims", claims)
+	c.Set(UserContextKey, claims.UserID)
 	c.Next()
 }
 }
