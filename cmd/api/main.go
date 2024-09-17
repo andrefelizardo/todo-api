@@ -6,6 +6,7 @@ import (
 	"github.com/andrefelizardo/todo-api/internal/configs"
 	"github.com/andrefelizardo/todo-api/internal/infrastructure"
 	"github.com/andrefelizardo/todo-api/internal/routes"
+	"github.com/andrefelizardo/todo-api/internal/utils"
 )
 
 func main() {
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading database config", err)
 	}
+
+	utils.InitJWTSecret(&config.JWT)
 
 	router := routes.SetupRouter(db)
 

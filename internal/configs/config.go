@@ -44,6 +44,8 @@ func LoadConfig() (*Config, error) {
     config.DB.Name = viper.GetString("DB_NAME")
     config.DB.SSLMode = viper.GetString("DB_SSLMODE")
 
+	config.JWT.Secret = viper.GetString("JWT_SECRET")
+
 	log.Info("Viper DB_HOST:", config.DB.Host)
 
     // Fallback para usar os.Getenv, caso o Viper não funcione

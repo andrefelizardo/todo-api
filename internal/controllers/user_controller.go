@@ -5,6 +5,7 @@ import (
 
 	"github.com/andrefelizardo/todo-api/internal/request"
 	"github.com/andrefelizardo/todo-api/internal/usecases"
+	"github.com/andrefelizardo/todo-api/internal/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,9 +38,22 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 			return
 		}
 	}
+
+	emailToken, err := utils.GenerateEmailConfirmationToken(user.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate email confirmation token"})
+		return
+	}
+
+	err = utils.SendEmailConfirmation(user.Email, emailToken)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Could not send email confirmation"})
+		return
+	}
 	
 	ctx.JSON(http.StatusCreated, gin.H{
 		"message": "User created",
 		"data": user,
+		"token": emailToken,
 	})
 }

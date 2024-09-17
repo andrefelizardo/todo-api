@@ -35,10 +35,10 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 //TODO: Account creation v1
 // [ ] Implement user creation
-// [ ] Generate JWT token on user creation and return
+// [x] Generate JWT token on user creation and return
 // [ ] Implement middleware to validate JWT token
 // [ ] Implement middleware to validate if user is owner of resource
-// [ ] Implement middleware to validate if user has email verified
+// [x] Implement middleware to validate if user has email verified
 // [ ] Implement email confirmation on user creation
 
 //TODO: Authentication flow v1
