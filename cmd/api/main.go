@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/andrefelizardo/todo-api/internal/routes"
+	router "github.com/andrefelizardo/todo-api/internal"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -16,7 +16,7 @@ func main() {
 	}
 	defer db.Close()
 
-	router := routes.SetupRouter()
+	router := router.SetupRouter()
 
 	router.Run()
 
