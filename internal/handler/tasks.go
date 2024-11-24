@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/andrefelizardo/todo-api/internal/dto"
@@ -20,7 +19,6 @@ func NewTasksHandler(usecase usecase.TasksUsecase) *TasksHandler {
 }
 
 func (t *TasksHandler) Create(ctx *gin.Context) {
-	log.Println("Started handler")
 	var input dto.CreateTaskInput
 
 	if err := ctx.ShouldBindJSON(&input); err != nil {
