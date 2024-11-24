@@ -3,10 +3,13 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	router "github.com/andrefelizardo/todo-api/internal"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+const defaultPort = "8080"
 
 func main() {
 
@@ -16,7 +19,12 @@ func main() {
 	}
 	defer db.Close()
 
-	router := router.SetupRouter()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
+	router := router.SetupRouter(db)
 
 	router.Run()
 
