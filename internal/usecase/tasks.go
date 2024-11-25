@@ -22,3 +22,12 @@ func (u *TasksUsecase) Create(input dto.CreateTaskInput) (model.Task, error) {
 	
 	return task, nil
 }
+
+func (u *TasksUsecase) FindAll() ([]model.Task, error) {
+	tasks, err := u.repo.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
+}
