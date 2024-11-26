@@ -19,6 +19,7 @@ func SetupRouter(db *sql.DB) *gin.Engine {
 	{
 		tasks.POST("/", tasksHandler.Create)
 		tasks.GET("/", tasksHandler.List)
+		tasks.GET("/:id", tasksHandler.GetDetails)
 	}
 
 	return router
