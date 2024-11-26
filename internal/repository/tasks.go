@@ -12,6 +12,7 @@ import (
 type TasksRepository interface {
 	Create(task dto.CreateTaskInput) (model.Task, error)
 	FindAll() ([]model.Task, error)
+	FindByID(id string) (model.Task, error)
 }
 
 type tasksRepositoryImpl struct {
@@ -67,7 +68,7 @@ func (t *tasksRepositoryImpl) FindAll() ([]model.Task, error) {
 
 		dueDate, err := dateConvert(due_date)
 		if err != nil {
-			
+			return nil, err
 		}
 
 		createdAt, err := dateConvert(created_at)
@@ -91,6 +92,44 @@ func (t *tasksRepositoryImpl) FindAll() ([]model.Task, error) {
 		})
 	}
 	return tasks, nil
+}
+
+func (t* tasksRepositoryImpl) FindByID(idInput string) (model.Task, error) {
+	var (
+		id, title, status, due_date, created_at, updated_at string
+		description sql.NullString
+	)
+
+	err := t.db.QueryRow("SELECT id, title, description, status, due_date, created_at, updated_at FROM tasks WHERE id = $1", idInput).Scan(&id, &title, &description, &status, &due_date, &created_at, &updated_at)
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	dueDate, err := dateConvert(due_date)
+		if err != nil {
+			return model.Task{}, err
+		}
+
+		createdAt, err := dateConvert(created_at)
+		if err != nil {
+			return model.Task{}, err
+		}
+
+		updatedAt, err := dateConvert(updated_at)
+		if err != nil {
+			return model.Task{}, err
+		}
+
+	return model.Task{
+		ID: id,
+		Title: title,
+		Description: &description.String,
+		Status: model.TaskStatus(status),
+		DueDate: dueDate,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+	}, nil
+
 }
 
 func dateConvert(input string) (time.Time, error) {

@@ -43,3 +43,18 @@ func (t *TasksHandler) List(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": tasks})
 }
+
+func (t *TasksHandler) GetDetails(ctx *gin.Context) {
+	task, err := t.tasksUsecase.FindByID(ctx.Param("id"))
+	if err != nil {
+		if err.Error() == "invalid ID" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"data": task})
+}

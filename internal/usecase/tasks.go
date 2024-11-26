@@ -1,9 +1,12 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/andrefelizardo/todo-api/internal/dto"
 	"github.com/andrefelizardo/todo-api/internal/model"
 	"github.com/andrefelizardo/todo-api/internal/repository"
+	"github.com/google/uuid"
 )
 
 type TasksUsecase struct {
@@ -30,4 +33,18 @@ func (u *TasksUsecase) FindAll() ([]model.Task, error) {
 	}
 
 	return tasks, nil
+}
+
+func (u *TasksUsecase) FindByID(id string) (model.Task, error) {
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return model.Task{}, errors.New("invalid ID")
+	}
+
+	task, err := u.repo.FindByID(id)
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	return task, nil
 }
